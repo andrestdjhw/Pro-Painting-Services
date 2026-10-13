@@ -1,2 +1,83 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+/* Only scan theme sources (skip build output and node_modules). */
+@source not "../build";
+
+/*
+ * Brand palette: red / gray / black / white.
+ * TODO: match --color-brand to the exact red in the client logo.
+ */
+@theme {
+  --color-brand: #c8102e;
+  --color-brand-dark: #9e0c24;
+  --color-ink: #111111;
+  --color-steel-50: #f6f6f7;
+  --color-steel-100: #ececee;
+  --color-steel-200: #d9d9dd;
+  --color-steel-300: #b5b6bc;
+  --color-steel-400: #8d8e96;
+  --color-steel-500: #6b6c74;
+  --color-steel-600: #52535a;
+  --color-steel-700: #3d3e43;
+  --color-steel-800: #26272b;
+  --color-steel-900: #1a1a1d;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Barlow Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+@layer components {
+  .pps-container {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+  .pps-section {
+    @apply py-16 md:py-24;
+  }
+  .pps-eyebrow {
+    @apply mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-brand;
+  }
+  .pps-heading {
+    @apply font-display text-4xl leading-[1.05] font-bold uppercase md:text-5xl;
+  }
+  .pps-btn {
+    @apply inline-flex min-h-12 items-center justify-center rounded-md px-6 py-3 text-base font-semibold transition-colors;
+  }
+  .pps-placeholder {
+    @apply flex items-center justify-center bg-steel-200 p-4 text-center text-xs font-medium text-steel-500;
+    background-image: repeating-linear-gradient(45deg, transparent 0 12px, rgb(255 255 255 / 0.35) 12px 24px);
+  }
+  .pps-faq-icon {
+    @apply relative h-5 w-5 flex-none;
+  }
+  .pps-faq-icon::before,
+  .pps-faq-icon::after {
+    @apply absolute top-1/2 left-0 h-0.5 w-5 -translate-y-1/2 bg-brand transition-transform content-[''];
+  }
+  .pps-faq-icon::after {
+    @apply rotate-90;
+  }
+  details[open] .pps-faq-icon::after {
+    @apply rotate-0;
+  }
+  .pps-input {
+    @apply w-full rounded-md border border-steel-300 bg-white px-4 py-3 text-base text-ink placeholder:text-steel-400 focus:border-brand focus:ring-2 focus:ring-brand/30 focus:outline-none;
+  }
+  .pps-input[aria-invalid="true"] {
+    @apply border-brand;
+  }
+}

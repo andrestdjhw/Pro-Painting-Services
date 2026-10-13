@@ -1,17 +1,12 @@
-<?php
+<?php get_header(); ?>
 
-get_header(); ?>
-
-<div class="max-w-4xl mx-auto px-4 prose">
-  <?php if (have_posts()) {
-    while(have_posts()) {
-      the_post(); ?>
-      <div>
-        <h1><?php the_title(); ?></h1>
-        <?php the_content(); ?>
-      </div>
-    <?php }
-  } ?>
-</div>
+<?php while (have_posts()) : the_post(); ?>
+  <?php pps_page_hero(get_the_title()); ?>
+  <section class="pps-section">
+    <div class="pps-container prose prose-lg max-w-3xl prose-a:text-brand">
+      <?php the_content(); ?>
+    </div>
+  </section>
+<?php endwhile; ?>
 
 <?php get_footer();
