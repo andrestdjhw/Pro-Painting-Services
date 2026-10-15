@@ -16,6 +16,9 @@ function pps_page_seo() {
     'about'    => array('title' => 'About Pro Painting Services | Albuquerque, NM', 'description' => 'Commercial, multifamily and hospitality painting services across New Mexico, along with select renovation work for office spaces.'),
     'services' => array('title' => 'Painting Services for Commercial & Managed Properties | PPS', 'description' => 'Commercial exterior, multifamily, interior unit, hotel and specialty surface painting in New Mexico. Find the service that fits your property.'),
     'projects' => array('title' => 'Projects | Pro Painting Services', 'description' => 'Browse Pro Painting Services work by property type and painting scope across New Mexico.'),
+    'service-areas'        => array('title' => 'Service Areas | Albuquerque, Rio Rancho & New Mexico | PPS', 'description' => 'Pro Painting Services works with commercial, multifamily and hospitality properties in Albuquerque, Rio Rancho and throughout New Mexico.'),
+    'terms-and-conditions' => array('title' => 'Terms and Conditions | Pro Painting Services', 'description' => 'Terms and conditions for using the Pro Painting Services website and submitting project quote requests.'),
+    'privacy-policy'       => array('title' => 'Privacy Policy | Pro Painting Services', 'description' => 'How Pro Painting Services collects, uses and protects the information submitted through this website.'),
     'contact'  => array('title' => 'Contact & Request a Quote | Pro Painting Services', 'description' => 'Call (505) 582-7126 or send a project request to Pro Painting Services. Serving commercial and managed properties across New Mexico.'),
   );
 
@@ -39,7 +42,7 @@ function pps_head_meta() {
   if (!empty($seo['description'])) {
     echo '<meta name="description" content="' . esc_attr($seo['description']) . "\">\n";
   }
-  echo '<meta name="theme-color" content="#111111">' . "\n";
+  echo '<meta name="theme-color" content="#111214">' . "\n";
 
   foreach (pps_structured_data() as $graph) {
     echo '<script type="application/ld+json">' . wp_json_encode($graph, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "</script>\n";
@@ -67,10 +70,10 @@ function pps_structured_data() {
     ),
     'areaServed' => array('@type' => 'State', 'name' => 'New Mexico'),
   );
-  if ($logo = pps_asset_url('logo')) {
+  if ($logo = pps_asset_url('brand/logo')) {
     $org['logo'] = $logo;
   }
-  $same_as = array_values(array_filter(array_merge(array($biz['gbp_url']), array_values($biz['socials']))));
+  $same_as = array_values(array_unique(array_filter(array_merge(array($biz['gbp_url']), array_values($biz['socials'])), fn($url) => str_starts_with((string) $url, 'http'))));
   if ($same_as) {
     $org['sameAs'] = $same_as;
   }

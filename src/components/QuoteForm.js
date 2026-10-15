@@ -1,5 +1,6 @@
 import React, { useMemo, useRef, useState } from "react"
 import { track } from "../tracking"
+import { ArrowIcon } from "./icons"
 
 const REQUIRED = {
   name: v => (v.trim() ? "" : "Please enter your name."),
@@ -21,7 +22,7 @@ function initialService(data, preset) {
 function Field({ id, label, required, error, className = "", children }) {
   return (
     <div className={className}>
-      <label htmlFor={id} className="mb-1.5 block text-sm font-semibold">
+      <label htmlFor={id} className="pps-field-label mb-1.5 block text-sm font-semibold">
         {label}
         {required && <span className="text-brand" aria-hidden="true"> *</span>}
       </label>
@@ -40,6 +41,9 @@ export default function QuoteForm({ data, variant = "full", service = "", headin
   const startedAt = useRef(Date.now())
   const started = useRef(false)
   const isMini = variant === "mini"
+  // Compact dark/translucent form for the home hero (desktop): fewer fields, two columns
+  const isHero = variant === "hero"
+  const isFull = !isMini && !isHero
 
   const [values, setValues] = useState({
     name: "",
@@ -117,7 +121,7 @@ export default function QuoteForm({ data, variant = "full", service = "", headin
 
   if (status === "success") {
     return (
-      <div className="rounded-lg bg-white p-8 text-center shadow-sm ring-1 ring-steel-200" role="status" aria-live="polite">
+      <div className={`p-8 text-center ${isHero ? "pps-form-dark border-t-2 border-brand text-white" : "rounded-sm bg-white shadow-sm ring-1 ring-steel-200"}`} role="status" aria-live="polite">
         <svg className="mx-auto h-12 w-12 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
           <circle cx="12" cy="12" r="10" />
           <path d="M8 12l3 3 5-6" />
@@ -143,15 +147,23 @@ export default function QuoteForm({ data, variant = "full", service = "", headin
   )
 
   return (
-    <form onSubmit={submit} noValidate className="relative rounded-lg bg-white p-6 shadow-sm ring-1 ring-steel-200 sm:p-8">
-      {heading && <h3 className="font-display text-3xl font-bold uppercase">{heading}</h3>}
+    <form
+      onSubmit={submit}
+      noValidate
+      className={
+        isHero
+          ? "pps-form-dark relative border-t-2 border-brand p-6 text-white xl:p-7"
+          : "relative rounded-sm border-t-4 border-brand bg-white p-6 shadow-xl ring-1 ring-steel-200 sm:p-8"
+      }
+    >
+      {heading && <h3 className={isHero ? "font-display text-xl font-extrabold tracking-tight" : "pps-heading"}>{heading}</h3>}
 
-      <div className="mt-6 grid gap-5 sm:grid-cols-2">
+      <div className={isHero ? "mt-5 grid gap-x-4 gap-y-4 sm:grid-cols-2" : "mt-6 grid gap-5 sm:grid-cols-2"}>
         <Field id={id("name")} label="Full Name" required error={errors.name}>
           {input("name", { autoComplete: "name" })}
         </Field>
 
-        {!isMini && (
+        {isFull && (
           <Field id={id("company")} label="Company / Property">
             {input("company", { autoComplete: "organization" })}
           </Field>
@@ -165,10 +177,11 @@ export default function QuoteForm({ data, variant = "full", service = "", headin
           {input("phone", { type: "tel", autoComplete: "tel", inputMode: "tel" })}
         </Field>
 
-        <Field id={id("location")} label="Project Location" required error={errors.location} className={isMini ? "" : "sm:col-span-2"}>
+        <Field id={id("location")} label="Project Location" required error={errors.location} className={isFull ? "sm:col-span-2" : ""}>
           {input("location", { placeholder: "City, State" })}
         </Field>
 
+        {!isHero && (
         <Field id={id("property_type")} label="Property Type">
           <select id={id("property_type")} name="property_type" value={values.property_type} onChange={update} onFocus={onFocus} className="pps-input">
             <option value="">Select…</option>
@@ -177,9 +190,10 @@ export default function QuoteForm({ data, variant = "full", service = "", headin
             ))}
           </select>
         </Field>
+        )}
 
         {!isMini && (
-          <Field id={id("service")} label="Service Needed">
+          <Field id={id("service")} label="Service Needed" className={isHero ? "sm:col-span-2" : ""}>
             <select id={id("service")} name="service" value={values.service} onChange={update} onFocus={onFocus} className="pps-input">
               <option value="">Select…</option>
               {data.services.map(s => (
@@ -194,7 +208,7 @@ export default function QuoteForm({ data, variant = "full", service = "", headin
           <textarea
             id={id("details")}
             name="details"
-            rows={4}
+            rows={isHero ? 2 : 4}
             value={values.details}
             onChange={update}
             onBlur={validateField}
@@ -213,7 +227,7 @@ export default function QuoteForm({ data, variant = "full", service = "", headin
         </div>
 
         <div className="sm:col-span-2">
-          <label className="flex items-start gap-3 text-sm text-steel-600">
+          <label className={`flex items-start gap-3 ${isHero ? "text-xs text-white/70" : "text-sm text-steel-600"}`}>
             <input
               id={id("consent")}
               type="checkbox"
@@ -223,7 +237,7 @@ export default function QuoteForm({ data, variant = "full", service = "", headin
               onFocus={onFocus}
               aria-invalid={errors.consent ? "true" : undefined}
               aria-describedby={errors.consent ? `${id("consent")}-error` : undefined}
-              className="mt-0.5 h-5 w-5 flex-none accent-brand"
+              className={`mt-0.5 flex-none accent-brand ${isHero ? "h-4 w-4" : "h-5 w-5"}`}
             />
             <span>
               I agree to be contacted by Pro Painting Services about this request. See our{" "}
@@ -237,7 +251,7 @@ export default function QuoteForm({ data, variant = "full", service = "", headin
       </div>
 
       {status === "error" && message && (
-        <p className="mt-5 rounded-md bg-brand/10 px-4 py-3 text-sm font-medium text-brand-dark" role="alert">
+        <p className="mt-5 rounded-sm bg-brand/10 px-4 py-3 text-sm font-medium text-brand-dark" role="alert">
           {message}
         </p>
       )}
@@ -245,9 +259,10 @@ export default function QuoteForm({ data, variant = "full", service = "", headin
       <button
         type="submit"
         disabled={status === "sending"}
-        className="pps-btn mt-6 w-full bg-brand text-white hover:bg-brand-dark disabled:opacity-60 sm:w-auto"
+        className={`pps-btn pps-btn-primary w-full disabled:opacity-60 ${isHero ? "mt-5" : "mt-6 sm:w-auto"}`}
       >
-        {status === "sending" ? "Sending…" : isMini ? "Send Project Request" : "Submit Request"}
+        <span className="pps-btn__text">{status === "sending" ? "Sending…" : isMini ? "Send Project Request" : "Submit Request"}</span>
+        {status !== "sending" && <ArrowIcon />}
       </button>
     </form>
   )

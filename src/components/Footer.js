@@ -1,82 +1,75 @@
 import React from "react"
+import { PhoneIcon, SocialLink } from "./icons"
 
-function Column({ title, children }) {
-  return (
-    <div>
-      <h2 className="font-display text-lg font-bold tracking-wider text-white uppercase">{title}</h2>
-      <div className="mt-4">{children}</div>
-    </div>
-  )
-}
-
-const linkClass = "hover:text-white transition-colors"
+const linkClass = "transition-colors hover:text-white"
 
 export default function Footer({ data }) {
   const year = new Date().getFullYear()
+  const links = [...data.socials]
+  if (data.gbpUrl && !links.some(s => s.label === "Google")) links.push({ label: "Google", url: data.gbpUrl })
 
   return (
-    <footer className="text-steel-300">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
-        <div>
-          <a href={data.homeUrl} className="inline-block" aria-label={`${data.siteName} home`}>
-            {data.logoUrl ? (
-              <img src={data.logoUrl} alt={data.siteName} className="h-14 w-auto" loading="lazy" />
-            ) : (
-              <span className="font-display text-2xl leading-none font-bold text-white uppercase">
-                Pro <span className="text-brand">Painting</span> Services
+    <footer className="relative isolate overflow-hidden text-sm text-steel-300">
+      {data.markUrl && <img src={data.markUrl} alt="" aria-hidden="true" loading="lazy" className="pps-watermark -right-10 -bottom-24 w-[22rem]" />}
+      <div className="mx-auto flex max-w-site flex-col gap-8 px-4 py-10 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8 xl:px-12">
+        <a href={data.homeUrl} className="inline-block shrink-0 text-white" aria-label={`${data.siteName} home`}>
+          {data.logoLightUrl ? (
+            <img src={data.logoLightUrl} alt={data.siteName} width="132" height="56" className="h-14 w-auto" loading="lazy" />
+          ) : (
+            <span className="flex flex-col leading-none">
+              <span className="font-display text-3xl font-extrabold tracking-tight">
+                P<span className="text-brand">P</span>S
               </span>
-            )}
-          </a>
-          <p className="mt-4 max-w-xs text-sm">
-            Commercial, multifamily and hospitality painting across New Mexico.
-          </p>
-          <a href={data.quoteUrl} className="pps-btn mt-6 bg-brand text-white hover:bg-brand-dark" data-track="service_quote_click">
-            Request a Quote
-          </a>
-        </div>
+              <span className="text-[0.6rem] font-bold tracking-wide uppercase">Pro Painting Services</span>
+            </span>
+          )}
+        </a>
 
-        <Column title="Contact">
-          <address className="space-y-3 not-italic">
-            <p>
-              <a href={data.phoneHref} className={`text-lg font-semibold text-white ${linkClass}`}>{data.phone}</a>
-            </p>
-            <p>
-              <a href={`mailto:${data.email}`} className={`break-all ${linkClass}`}>{data.email}</a>
-            </p>
-            <p>
-              {data.address[0]}<br />{data.address[1]}
-            </p>
-            <p className="text-sm">{data.serviceArea}</p>
-          </address>
-        </Column>
-
-        <Column title="Services">
-          <ul className="space-y-2 text-sm">
-            {data.services.map(s => (
-              <li key={s.slug}><a href={s.url} className={linkClass}>{s.name}</a></li>
-            ))}
-          </ul>
-        </Column>
-
-        <Column title="Company">
-          <ul className="space-y-2 text-sm">
-            {data.nav.filter(item => item.label !== "Services").map(item => (
+        <nav aria-label="Footer">
+          <ul className="flex flex-wrap gap-x-8 gap-y-2">
+            {data.nav.map(item => (
               <li key={item.label}><a href={item.url} className={linkClass}>{item.label}</a></li>
             ))}
-            {data.gbpUrl && (
-              <li><a href={data.gbpUrl} className={linkClass} target="_blank" rel="noopener">Google Business Profile</a></li>
-            )}
-            {data.socials.map(s => (
-              <li key={s.label}><a href={s.url} className={linkClass} target="_blank" rel="noopener">{s.label}</a></li>
-            ))}
           </ul>
-        </Column>
+        </nav>
+
+        <div className="flex flex-wrap items-center gap-6">
+          {links.length > 0 && (
+            <div className="flex gap-4">
+              {links.map(s => <SocialLink key={s.label} {...s} />)}
+            </div>
+          )}
+          <a href={data.phoneHref} className={`flex items-center gap-2 font-semibold text-white ${linkClass}`}>
+            <PhoneIcon className="h-4 w-4" />
+            {data.phone}
+          </a>
+        </div>
       </div>
 
       <div className="border-t border-steel-800">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-6 text-xs sm:flex-row sm:justify-between sm:px-6 lg:px-8">
-          <p>&copy; {year} {data.siteName}. All rights reserved.</p>
-          <a href={data.privacyUrl} className={linkClass}>Privacy Policy</a>
+        <div className="mx-auto flex max-w-site flex-col gap-2 px-4 py-5 text-xs sm:px-6 lg:flex-row lg:justify-between lg:px-8 xl:px-12">
+          <address className="not-italic">
+            {data.address.join(", ")} ·{" "}
+            <a href={`mailto:${data.email}`} className={linkClass}>{data.email}</a>
+          </address>
+          <p>{data.serviceArea}</p>
+        </div>
+      </div>
+
+      {/* Copyright / legal / agency credit */}
+      <div className="border-t border-steel-800 bg-black/30">
+        <div className="mx-auto flex max-w-site flex-col gap-3 px-4 py-4 text-xs sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8 xl:px-12">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <p>&copy; {year} {data.siteName}. All rights reserved.</p>
+            <a href={data.privacyUrl} className={linkClass}>Privacy Policy</a>
+            <a href={data.termsUrl} className={linkClass}>Terms and Conditions</a>
+          </div>
+          <p>
+            Site by{" "}
+            <a href={data.agencyUrl} target="_blank" rel="noopener" className="font-semibold text-white transition-colors hover:text-brand">
+              {data.agencyName}
+            </a>
+          </p>
         </div>
       </div>
     </footer>

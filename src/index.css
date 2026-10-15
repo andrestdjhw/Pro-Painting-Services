@@ -3,34 +3,73 @@
 
 /* Only scan theme sources (skip build output and node_modules). */
 @source not "../build";
+@source not "../dist";
 
 /*
- * Brand palette: red / gray / black / white.
- * TODO: match --color-brand to the exact red in the client logo.
+ * Brand palette sampled from the PPS logo: red #ED1F24, charcoal tower #4A4A4A,
+ * chrome/silver lettering, plus black and white.
  */
 @theme {
-  --color-brand: #c8102e;
-  --color-brand-dark: #9e0c24;
-  --color-ink: #111111;
-  --color-steel-50: #f6f6f7;
-  --color-steel-100: #ececee;
-  --color-steel-200: #d9d9dd;
-  --color-steel-300: #b5b6bc;
-  --color-steel-400: #8d8e96;
-  --color-steel-500: #6b6c74;
-  --color-steel-600: #52535a;
-  --color-steel-700: #3d3e43;
-  --color-steel-800: #26272b;
-  --color-steel-900: #1a1a1d;
+  --color-brand: #ed1f24;
+  --color-brand-dark: #c4161c;
+  --color-charcoal: #4a4a4a;
+  --color-ink: #111214;
+  --color-steel-50: #f4f4f5;
+  --color-steel-100: #ebebed;
+  --color-steel-200: #dcdcdf;
+  --color-steel-300: #b9b9be;
+  --color-steel-400: #909097;
+  --color-steel-500: #6d6d74;
+  --color-steel-600: #4a4a4a;
+  --color-steel-700: #3a3a3f;
+  --color-steel-800: #232327;
+  --color-steel-900: #18181b;
+
+  /* Site content width (max-w-site). Change here to widen/narrow every container at once. */
+  --container-site: 96rem;
 
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Barlow Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
+  --font-display: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@keyframes pps-btn-roll {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(80%); }
+  51% { transform: translateY(-80%); }
+  100% { transform: translateY(0); }
+}
+
+/* Marquee moving left to right: the track holds two identical sets and slides by one set width. */
+@keyframes pps-marquee-ltr {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pps-btn::before { transition: none; }
+  .pps-btn:hover .pps-btn__text { animation: none; }
+  .pps-marquee { mask-image: none; }
+  .pps-marquee__track { width: 100%; animation: none; }
+  .pps-marquee__set { width: 100%; padding-right: 0; }
+  .pps-marquee__set[aria-hidden] { display: none; }
+  .pps-marquee__set > li { flex: 1 1 0; width: auto; }
+  .pps-ticker { mask-image: none; }
+  .pps-ticker__track { width: 100%; justify-content: center; animation: none; }
+  .pps-ticker__set[aria-hidden] { display: none; }
+  .pps-ticker__set { flex-wrap: wrap; justify-content: center; white-space: normal; padding-right: 0; }
+  .pps-ticker__set > .pps-ticker__dot:last-child { display: none; }
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 6rem;
+  }
+  /* Elements waiting to slide in from the side sit off-canvas; clip them so the page never
+     scrolls sideways. `clip` (unlike `hidden`) creates no scroll container, so the sticky navbar still works. */
+  html,
+  body {
+    overflow-x: clip;
   }
   :focus-visible {
     outline: 3px solid var(--color-brand);
@@ -43,24 +82,233 @@
 
 @layer components {
   .pps-container {
-    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-site px-4 sm:px-6 lg:px-8 xl:px-12;
   }
   .pps-section {
     @apply py-16 md:py-24;
   }
+
+  /* Typography */
   .pps-eyebrow {
-    @apply mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-brand;
+    @apply mb-3 text-xs font-semibold tracking-[0.28em] text-brand uppercase;
+  }
+  .pps-h1 {
+    @apply font-display text-[2.6rem] leading-[1.05] font-extrabold tracking-tight sm:text-5xl lg:text-6xl;
   }
   .pps-heading {
-    @apply font-display text-4xl leading-[1.05] font-bold uppercase md:text-5xl;
+    @apply font-display text-3xl leading-[1.1] font-extrabold tracking-tight md:text-4xl lg:text-[2.75rem];
   }
+  .pps-title {
+    @apply font-display text-xl leading-tight font-bold tracking-tight;
+  }
+  /* Logo motif above headings: the red and charcoal towers on the rising baseline */
+  .pps-rule::before {
+    content: "";
+    display: block;
+    width: 2.75rem;
+    height: 2.25rem;
+    margin-bottom: 1rem;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 32'%3E%3Cpath fill='%23ed1f24' d='M6 1l9 2v27H6z'/%3E%3Cpath fill='%234a4a4a' d='M15 9l10 2v18.6L15 30z'/%3E%3Cg fill='%23fff'%3E%3Crect x='9' y='6' width='3' height='3'/%3E%3Crect x='9' y='11' width='3' height='3'/%3E%3Crect x='9' y='16' width='3' height='3'/%3E%3Crect x='9' y='21' width='3' height='3'/%3E%3Crect x='18' y='14' width='4' height='2'/%3E%3Crect x='18' y='19' width='4' height='2'/%3E%3Crect x='18' y='24' width='4' height='2'/%3E%3C/g%3E%3Cpath d='M0 31.2L38 29.4' stroke='%234a4a4a' stroke-width='1.4'/%3E%3C/svg%3E") no-repeat left bottom / contain;
+  }
+
+  /* Chrome lettering from the logo ("PPS"). Use .pps-chrome on dark backgrounds, .pps-chrome-dark on light. */
+  .pps-chrome,
+  .pps-chrome-dark {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+  .pps-chrome {
+    background-image: linear-gradient(175deg, #ffffff 0%, #d4d4d6 40%, #8c8c90 52%, #c9c9cc 70%, #f2f2f2 100%);
+  }
+  .pps-chrome-dark {
+    background-image: linear-gradient(175deg, #9b9b9f 0%, #4a4a4a 42%, #1f1f22 55%, #5d5d61 75%, #a3a3a6 100%);
+  }
+
+  /* Faint building mark from the logo, used as a watermark in dark bands */
+  .pps-watermark {
+    @apply pointer-events-none absolute -z-10 h-auto select-none;
+    opacity: 0.07;
+    filter: grayscale(1) brightness(2.6);
+  }
+
+  /* Buttons — skewed fill slides in from the right and the label "rolls" on hover */
   .pps-btn {
-    @apply inline-flex min-h-12 items-center justify-center rounded-md px-6 py-3 text-base font-semibold transition-colors;
+    @apply relative isolate inline-flex min-h-12 items-center justify-center gap-2 overflow-hidden rounded-sm border-2 px-6 py-3 text-[0.95rem] font-semibold;
+    transition: color 0.2s 80ms, border-color 0.2s;
   }
+  .pps-btn::before {
+    content: "";
+    position: absolute;
+    inset: -2px -25%;
+    z-index: 0;
+    background: var(--pps-btn-fill, var(--color-ink));
+    transform: translateX(112%) skewX(-14deg);
+    transition: transform 0.3s ease;
+  }
+  .pps-btn:hover::before,
+  .pps-btn:focus-visible::before {
+    transform: translateX(0) skewX(-14deg);
+  }
+  .pps-btn > * {
+    position: relative;
+    z-index: 1;
+  }
+  .pps-btn__text {
+    display: block;
+  }
+  .pps-btn:hover .pps-btn__text {
+    animation: pps-btn-roll 0.3s ease forwards;
+  }
+  .pps-btn:disabled::before {
+    display: none;
+  }
+  .pps-btn:disabled .pps-btn__text {
+    animation: none;
+  }
+
+  /* Variants: base colors + fill color + hover text color */
+  .pps-btn-primary {
+    @apply border-brand bg-brand text-white;
+    --pps-btn-fill: var(--color-ink);
+  }
+  .pps-btn-secondary {
+    @apply border-ink bg-ink text-white;
+    --pps-btn-fill: var(--color-brand);
+  }
+  .pps-btn-secondary:hover {
+    @apply border-brand;
+  }
+  .pps-btn-outline {
+    @apply border-ink text-ink;
+    --pps-btn-fill: var(--color-ink);
+  }
+  .pps-btn-outline:hover,
+  .pps-btn-outline:focus-visible {
+    @apply text-white;
+  }
+  .pps-btn-light {
+    @apply border-white text-white;
+    --pps-btn-fill: #fff;
+  }
+  .pps-btn-light:hover,
+  .pps-btn-light:focus-visible {
+    @apply text-ink;
+  }
+
+  .pps-arrow {
+    @apply h-4 w-4 flex-none transition-transform;
+  }
+  .pps-btn:hover .pps-arrow,
+  .group:hover .pps-arrow {
+    @apply translate-x-1;
+  }
+
+  /* Home hero + ticker = one screen tall (below the sticky header; on mobile also above the fixed call bar) */
+  .pps-hero-screen {
+    --pps-header-h: 72px;      /* navbar (mobile) */
+    --pps-mobile-bar-h: 3.5rem; /* fixed Call / Quote bar, below lg */
+    display: flex;
+    flex-direction: column;
+    /* min-height (not height) so the hero can grow if its content (e.g. the quote form) needs more room */
+    min-height: max(34rem, calc(100vh - var(--pps-header-h) - var(--pps-mobile-bar-h)));
+    min-height: max(34rem, calc(100svh - var(--pps-header-h) - var(--pps-mobile-bar-h)));
+  }
+  @media (min-width: 768px) {
+    .pps-hero-screen { --pps-header-h: 112px; } /* topbar 40 + navbar 72 */
+  }
+  @media (min-width: 1024px) {
+    .pps-hero-screen { --pps-header-h: 120px; --pps-mobile-bar-h: 0px; } /* topbar 40 + navbar 80 */
+  }
+
+  /* Text ticker (home property-types strip) */
+  .pps-ticker {
+    @apply overflow-hidden;
+    mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  }
+  .pps-ticker__track {
+    @apply flex w-max;
+    animation: pps-marquee-ltr 60s linear infinite;
+  }
+  .pps-ticker:hover .pps-ticker__track {
+    animation-play-state: paused;
+  }
+  .pps-ticker__set {
+    @apply flex flex-none items-center gap-8 py-5 pr-8 text-[0.7rem] font-semibold tracking-[0.22em] whitespace-nowrap uppercase sm:text-xs;
+  }
+  .pps-ticker__dot {
+    @apply h-1.5 w-1.5 flex-none rounded-full bg-brand;
+  }
+
+  /* Marquee */
+  .pps-marquee {
+    @apply overflow-hidden;
+    mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+  }
+  .pps-marquee__track {
+    @apply flex w-max;
+    animation: pps-marquee-ltr 32s linear infinite;
+  }
+  .pps-marquee:hover .pps-marquee__track,
+  .pps-marquee:focus-within .pps-marquee__track {
+    animation-play-state: paused;
+  }
+  .pps-marquee__set {
+    @apply flex gap-4 pr-4;
+  }
+  .pps-marquee__set > li {
+    @apply w-[22rem] flex-none;
+  }
+
+  /* Project photo carousel (src/gallery.js) */
+  .pps-gallery__track {
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+  }
+  .pps-gallery__track::-webkit-scrollbar {
+    display: none;
+  }
+  .pps-gallery__btn {
+    @apply absolute top-1/2 z-[4] flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-ink opacity-0 shadow-md transition hover:bg-brand hover:text-white focus-visible:opacity-100;
+  }
+  .pps-gallery:hover .pps-gallery__btn {
+    @apply opacity-100;
+  }
+  @media (hover: none) {
+    .pps-gallery__btn {
+      @apply opacity-100;
+    }
+  }
+  .pps-gallery__count {
+    @apply absolute right-3 bottom-3 z-[4] rounded-full bg-ink/75 px-2.5 py-1 text-xs font-semibold text-white;
+  }
+
+  /* Trustindex reviews widget: it stays at 0 height until its loader initializes it on view,
+     so reserve its space to avoid a layout jump (CLS). */
+  .pps-reviews-widget {
+    min-height: 32rem;
+  }
+  @media (min-width: 1024px) {
+    .pps-reviews-widget {
+      min-height: 17.5rem;
+    }
+  }
+
+  /* Partner logos: white monochrome, dimmed until hover */
+  .pps-partner-logo {
+    @apply h-12 w-auto max-w-[11rem] object-contain opacity-60 transition duration-300 md:h-16 md:max-w-[14rem];
+  }
+  .pps-partner-logo:hover {
+    @apply scale-105 opacity-100;
+  }
+
+  /* Image placeholder until real photos are added */
   .pps-placeholder {
     @apply flex items-center justify-center bg-steel-200 p-4 text-center text-xs font-medium text-steel-500;
     background-image: repeating-linear-gradient(45deg, transparent 0 12px, rgb(255 255 255 / 0.35) 12px 24px);
   }
+
+  /* FAQ accordion */
   .pps-faq-icon {
     @apply relative h-5 w-5 flex-none;
   }
@@ -74,10 +322,200 @@
   details[open] .pps-faq-icon::after {
     @apply rotate-0;
   }
+
+  /* Forms */
   .pps-input {
-    @apply w-full rounded-md border border-steel-300 bg-white px-4 py-3 text-base text-ink placeholder:text-steel-400 focus:border-brand focus:ring-2 focus:ring-brand/30 focus:outline-none;
+    @apply w-full rounded-sm border border-steel-300 bg-white px-4 py-3 text-base text-ink placeholder:text-steel-400 focus:border-brand focus:ring-2 focus:ring-brand/30 focus:outline-none;
   }
   .pps-input[aria-invalid="true"] {
     @apply border-brand;
   }
+
+  /* Dark translucent form (home hero), styled after the reference glass panel */
+  .pps-form-dark {
+    background: rgb(11 13 18 / 0.62);
+    backdrop-filter: blur(28px) saturate(1.4);
+    -webkit-backdrop-filter: blur(28px) saturate(1.4);
+    box-shadow: 0 18px 44px -18px rgb(0 0 0 / 0.6);
+  }
+  .pps-form-dark .pps-field-label {
+    @apply mb-1.5 text-[0.68rem] font-medium tracking-[0.18em] text-steel-300 uppercase;
+  }
+  .pps-form-dark .pps-input {
+    @apply rounded-none border-white/20 bg-white/10 py-2.5 text-white placeholder:text-white/40 focus:border-brand focus:bg-white/15 focus:ring-brand/40;
+  }
+  .pps-form-dark select.pps-input option {
+    @apply bg-white text-ink;
+  }
+  .pps-form-dark a {
+    @apply text-white;
+  }
+}
+
+/* Room for the fixed mobile call bar (Navbar.js). Unlayered and `html body` so it beats
+   WordPress's inline global styles (`body { padding: 0 }`), which override utility classes. */
+html body {
+  padding-bottom: 3.5rem;
+}
+@media (min-width: 1024px) {
+  html body {
+    padding-bottom: 0;
+  }
+}
+
+/* ==========================================================================
+   Motion (src/animations.js). Only active with .pps-motion on <html>, which
+   the script adds when the visitor hasn't asked for reduced motion.
+   ========================================================================== */
+
+:root {
+  --ease-out-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Scroll reveal: hidden state applies until .is-visible; the transition is only
+   active while .is-animating, so the visible state never overrides hover effects. */
+.pps-motion [data-reveal]:not(.is-visible) { opacity: 0; }
+.pps-motion [data-reveal="up"]:not(.is-visible) { translate: 0 32px; }
+.pps-motion [data-reveal="left"]:not(.is-visible) { translate: -48px 0; }
+.pps-motion [data-reveal="right"]:not(.is-visible) { translate: 48px 0; }
+.pps-motion [data-reveal="zoom"]:not(.is-visible) { scale: 0.94; }
+.pps-motion [data-reveal].is-animating {
+  transition:
+    opacity 0.8s var(--ease-out-soft),
+    translate 0.8s var(--ease-out-soft),
+    scale 0.8s var(--ease-out-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+/* Wipe clips the children, not the observed element (a fully clipped target never "intersects") */
+.pps-motion [data-reveal="wipe"],
+.pps-motion [data-reveal="wipe"]:not(.is-visible) { opacity: 1; } /* wipe only, no fade */
+.pps-motion [data-reveal="wipe"]:not(.is-visible) > * { clip-path: inset(0 100% 0 0); }
+/* Explicit end value: `none` can't be interpolated, so without it the wipe would jump */
+.pps-motion [data-reveal="wipe"].is-visible > * { clip-path: inset(0 0 0 0); }
+.pps-motion [data-reveal="wipe"].is-animating > * { transition: clip-path 1.1s var(--ease-out-soft); }
+
+/* Heading towers "rise" from the baseline when their block is revealed */
+.pps-rule::before {
+  transform-origin: bottom left;
+  transition: transform 0.7s var(--ease-out-soft) 0.25s;
+}
+.pps-motion [data-reveal]:not(.is-visible) .pps-rule::before,
+.pps-motion .pps-rule[data-reveal]:not(.is-visible)::before {
+  transform: scaleY(0);
+}
+
+/* Hero entrance: content rises in sequence, background settles with a slow zoom */
+@keyframes pps-rise {
+  from { opacity: 0; translate: 0 28px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes pps-settle {
+  from { scale: 1.14; }
+  to { scale: 1.04; }
+}
+/* .is-playing is toggled by the script, so the entrance replays when the hero returns to view */
+.pps-motion [data-hero]:not(.is-playing) .pps-hero-in > * { opacity: 0; }
+.pps-motion [data-hero].is-playing .pps-hero-in > * {
+  animation: pps-rise 0.9s var(--ease-out-soft) both;
+}
+.pps-motion .pps-hero-in > *:nth-child(1) { animation-delay: 0.1s; }
+.pps-motion .pps-hero-in > *:nth-child(2) { animation-delay: 0.22s; }
+.pps-motion .pps-hero-in > *:nth-child(3) { animation-delay: 0.36s; }
+.pps-motion .pps-hero-in > *:nth-child(4) { animation-delay: 0.5s; }
+.pps-motion .pps-hero-in > *:nth-child(5) { animation-delay: 0.62s; }
+.pps-motion [data-hero]:not(.is-playing) .pps-hero-form { opacity: 0; }
+.pps-motion [data-hero].is-playing .pps-hero-form {
+  animation: pps-rise 1s var(--ease-out-soft) 0.45s both;
+}
+.pps-motion [data-hero] > img { translate: 0 var(--parallax-y, 0); }
+.pps-motion [data-hero]:not(.is-playing) > img { scale: 1.14; }
+.pps-motion [data-hero].is-playing > img { animation: pps-settle 9s ease-out both; }
+
+/* Parallax backgrounds in dark bands */
+.pps-motion [data-parallax] > img {
+  scale: 1.2;
+  translate: 0 var(--parallax-y, 0);
+  will-change: translate;
+}
+
+/* Logo watermark drifts gently */
+@keyframes pps-float {
+  from { translate: 0 0; rotate: 0deg; }
+  to { translate: 0 -18px; rotate: -1.5deg; }
+}
+.pps-motion .pps-watermark {
+  animation: pps-float 7s ease-in-out infinite alternate;
+}
+
+/* Google map: muted to match the palette, full color on hover */
+.pps-map iframe {
+  filter: grayscale(0.55) contrast(1.05);
+  transition: filter 0.4s ease;
+}
+.pps-map:hover iframe {
+  filter: none;
+}
+
+/* Header gains depth once the page scrolls */
+#pps-navbar {
+  transition: box-shadow 0.3s ease;
+}
+#pps-navbar.is-scrolled {
+  box-shadow: 0 10px 30px -12px rgb(17 18 20 / 0.25);
+}
+
+/* ==========================================================================
+   3D card tilt (src/tilt.js) — applies to every .pps-card.
+   Unlayered on purpose so it wins over the cards' utility shadows/transitions.
+   ========================================================================== */
+.pps-card {
+  position: relative;
+  transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(var(--tilt-scale, 1));
+  transition:
+    transform 0.6s var(--ease-out-soft),
+    box-shadow 0.6s var(--ease-out-soft),
+    translate 0.3s ease;
+}
+.pps-card.is-tilting {
+  --tilt-scale: 1.025;
+  z-index: 2;
+  will-change: transform;
+  transition:
+    transform 0.12s linear,
+    box-shadow 0.25s ease;
+  /* Directional drop shadow + keep the 1px outline (Tailwind rings are box-shadows too) */
+  box-shadow:
+    var(--sx, 0px) var(--sy, 18px) 42px -14px rgb(17 18 20 / 0.4),
+    0 4px 12px -4px rgb(17 18 20 / 0.12),
+    0 0 0 1px rgb(17 18 20 / 0.06);
+}
+/* Soft light glare that follows the pointer */
+.pps-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgb(255 255 255 / 0.28), transparent 55%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.pps-card.is-tilting::after {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pps-card,
+  .pps-card.is-tilting {
+    transform: none;
+  }
+}
+
+/* Error messages need a lighter red to stay legible on the dark hero form
+   (unlayered so it beats the `text-brand` utility on the message) */
+.pps-form-dark [role="alert"] {
+  color: #ff8f92;
+}
+.pps-form-dark .pps-input[aria-invalid="true"] {
+  border-color: #ff6b6f;
 }

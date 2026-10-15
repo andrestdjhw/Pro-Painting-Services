@@ -11,22 +11,35 @@
  */
 
 function pps_business() {
+  // Google Business Profile "Pro Painting Services LLC" (Place ID from the Trustindex plugin connection).
+  $place_id = 'ChIJVVWEvEdlIocRK62rK-TTqlQ';
+
   return array(
     'name'          => 'Pro Painting Services',
     'phone'         => '(505) 582-7126',
     'phone_href'    => 'tel:+15055827126',
     'email'         => 'office@propaintingsrvc.com',
-    'street'        => '3136 Coors Blvd NW',
+    // Matches the Google Business Profile address exactly (NAP consistency).
+    'street'        => '3136 Coors Blvd NW Ste A',
     'city'          => 'Albuquerque',
     'region'        => 'NM',
     'postal'        => '87120',
     'service_area'  => 'Serving New Mexico. Select out-of-state project inquiries are welcome.',
-    // TODO(verify): official Google Business Profile URL and reviews URL.
-    'gbp_url'       => '',
-    'reviews_url'   => '',
-    // TODO(verify): exact social URLs. Only verified profiles should be listed.
+    'place_id'      => $place_id,
+    'gbp_url'       => "https://www.google.com/maps/place/?q=place_id:{$place_id}",
+    'reviews_url'   => "https://search.google.com/local/reviews?placeid={$place_id}",
+    'write_review_url' => "https://search.google.com/local/writereview?placeid={$place_id}",
+    // Reviews widget (Trustindex "Widgets for Google Reviews" plugin). Rendered only while the plugin is active.
+    'reviews_shortcode' => '[trustindex no-registration=google]',
+    // Shown in the topbar and footer, in this order. Icon keys: Facebook, Instagram, TikTok, Google, BBB.
+    // TODO(before launch): replace every '#' with the client's verified profile URL, or remove the entry.
+    // Instagram handle comes from the client questionnaire; confirm it.
     'socials'       => array(
-      // 'Instagram' => 'https://www.instagram.com/propainting.services/',
+      'Facebook'  => '#',
+      'Instagram' => 'https://www.instagram.com/propainting.services/',
+      'TikTok'    => '#',
+      'Google'    => "https://www.google.com/maps/place/?q=place_id:{$place_id}",
+      'BBB'       => '#',
     ),
     // Inbox that receives quote requests.
     'leads_to'      => 'office@propaintingsrvc.com',
@@ -40,6 +53,57 @@ function pps_business() {
  */
 function pps_reviews() {
   return array();
+}
+
+/** Service-area labels (brief: geographic references only, no invented locations). */
+function pps_service_areas() {
+  return array('Albuquerque', 'Rio Rancho', 'New Mexico Statewide', 'Other states by inquiry');
+}
+
+/**
+ * Service areas shown on /contact/service-areas/, each with a Google map.
+ * Only the areas confirmed in the brief are listed. To add a city or county, add an entry
+ * here (map = what Google Maps should search, zoom = 6 state … 13 city).
+ * TODO(verify with client): any additional cities/counties they actively serve.
+ */
+function pps_service_area_maps() {
+  return array(
+    array(
+      'name'   => 'Albuquerque',
+      'county' => 'Bernalillo County',
+      'text'   => 'Our home base. Pro Painting Services is located on Coors Blvd NW and works with commercial, multifamily and hospitality properties across the Albuquerque metro area.',
+      'map'    => 'Albuquerque, NM',
+      'zoom'   => 11,
+    ),
+    array(
+      'name'   => 'Rio Rancho',
+      'county' => 'Sandoval County',
+      'text'   => 'Painting for commercial buildings, apartment communities and managed properties in Rio Rancho and the surrounding Sandoval County area.',
+      'map'    => 'Rio Rancho, NM',
+      'zoom'   => 12,
+    ),
+    array(
+      'name'   => 'New Mexico Statewide',
+      'county' => 'All counties',
+      'text'   => 'Pro Painting Services works on projects throughout New Mexico. Share your property location and our team can discuss availability.',
+      'map'    => 'New Mexico',
+      'zoom'   => 6,
+    ),
+  );
+}
+
+/**
+ * Partner / affiliation logos (Home). Taken from the client's current site (propaintingsrvc.com),
+ * converted to white monochrome PNGs in assets/images/partners/{key}.png.
+ * TODO(verify): client authorization to display each brand (brief requirement).
+ */
+function pps_partners() {
+  return array(
+    'living-well-homes' => 'Living Well Homes',
+    'sherwin-williams'  => 'Sherwin-Williams',
+    'aanm'              => 'Apartment Association of New Mexico',
+    'bbb'               => 'BBB Accredited Business',
+  );
 }
 
 function pps_property_types() {
@@ -298,5 +362,47 @@ function pps_project_categories() {
     'multifamily' => 'Multifamily',
     'hospitality' => 'Hospitality',
     'specialty'   => 'Specialty',
+  );
+}
+
+/**
+ * Real PPS project photos (Media Library, uploaded Oct 2026) assigned to theme image slots.
+ * Keys match pps_image() keys; values are attachment paths relative to wp-content/uploads.
+ * These take priority over the temporary stock photos in assets/images/stock/.
+ * Slots without a real photo yet (hotel, hospitality, signage) keep their stock image.
+ */
+function pps_photo_map() {
+  $p = fn($n) => "2026/10/Mesa-de-trabajo-{$n}.webp";
+  return array(
+    'home-hero'                                 => $p(20),
+    'home-crew'                                 => $p(39),
+    'home-cta'                                  => $p(38),
+    'category-commercial'                       => $p(8),
+    'category-multifamily'                      => $p(36),
+    'service-commercial-exterior-painting'      => $p(20),
+    'service-commercial-exterior-painting-fit'  => $p(14),
+    'service-multifamily-exterior-painting'     => $p(45),
+    'service-multifamily-exterior-painting-fit' => $p(22),
+    'service-interior-unit-painting'            => $p(12),
+    'service-interior-unit-painting-fit'        => $p(13),
+    'service-interior-unit-painting-process'    => $p(11),
+    'service-office-renovations'                => $p(17),
+    'service-office-renovations-fit'            => $p(16),
+    'service-pool-area-painting'                => $p(27),
+    'service-pool-area-painting-fit'            => $p(23),
+    'service-parking-area-painting'             => $p(34),
+    'service-parking-area-painting-fit'         => $p(9),
+    'service-metal-painting'                    => $p(52),
+    'service-metal-painting-fit'                => $p(53),
+    'service-signage-painting-fit'              => $p(8),
+    'service-specialty'                         => $p(28),
+    'painting-process'                          => $p(43),
+    'home-process'                              => $p(10),
+    'about-team'                                => $p(24),
+    'about-project-1'                           => $p(55),
+    'about-project-2'                           => $p(18),
+    'services-hero'                             => $p(35),
+    'services-cta'                              => $p(2),
+    'projects-hero'                             => $p(59),
   );
 }

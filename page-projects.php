@@ -40,7 +40,7 @@ $projects   = pps_get_projects(array('category' => $active, 'limit' => 24));
     <?php pps_section_heading('Have a Similar Property?', '', 'Tell us about your property, its location and the painting work you need.'); ?>
     <div class="flex flex-wrap gap-4">
       <?php pps_button('Discuss a Similar Project', home_url('/contact/'), 'primary', 'data-track="service_quote_click"'); ?>
-      <?php pps_call_button('outline'); ?>
+      <?php pps_call_button('link-dark'); ?>
     </div>
   </div>
 </section>

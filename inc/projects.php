@@ -134,31 +134,48 @@ function pps_get_projects($args = array()) {
   return get_posts($query);
 }
 
-/** Project card: [Title] / [City, State] | [Property type] | [Painting work] / [1 sentence]. */
-function pps_project_card($project, $with_gallery = false) {
+/**
+ * Project card: photo, [Title], [City, State] • [Property type] • [Painting work], optional 1-sentence detail.
+ * $full adds the gallery carousel and excerpt (Projects page).
+ */
+function pps_project_card($project, $full = false) {
   $terms    = get_the_terms($project, 'pps_project_category');
   $category = $terms && !is_wp_error($terms) ? $terms[0]->name : '';
   $meta     = array_filter(array(get_post_meta($project->ID, 'pps_location', true), $category, get_post_meta($project->ID, 'pps_scope', true)));
-  $gallery  = $with_gallery ? array_filter(explode(',', get_post_meta($project->ID, 'pps_gallery', true))) : array();
+  $gallery  = $full ? array_filter(explode(',', get_post_meta($project->ID, 'pps_gallery', true))) : array();
   ?>
-  <article class="overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-steel-200" data-project="<?php echo esc_attr($project->post_name); ?>">
-    <?php if ($gallery) : ?>
-      <div class="flex snap-x snap-mandatory overflow-x-auto" tabindex="0" aria-label="<?php echo esc_attr(get_the_title($project)); ?> photos">
-        <?php foreach ($gallery as $id) : ?>
-          <?php echo wp_get_attachment_image($id, 'pps-card', false, array('class' => 'aspect-[4/3] w-full flex-none snap-center object-cover', 'loading' => 'lazy')); ?>
-        <?php endforeach; ?>
+  <article class="pps-card flex flex-col overflow-hidden rounded-sm bg-white shadow-sm ring-1 ring-steel-200" data-project="<?php echo esc_attr($project->post_name); ?>">
+    <?php if ($gallery) :
+      $title = get_the_title($project);
+      $total = count($gallery);
+      ?>
+      <div class="pps-gallery relative" data-gallery>
+        <div class="pps-gallery__track flex snap-x snap-mandatory overflow-x-auto" tabindex="0" role="region" aria-roledescription="carousel" aria-label="<?php echo esc_attr("{$title} photos"); ?>">
+          <?php foreach (array_values($gallery) as $i => $id) : ?>
+            <?php echo wp_get_attachment_image($id, 'pps-card', false, array(
+              'class'   => 'aspect-[4/3] w-full flex-none snap-center object-cover',
+              'loading' => 'lazy',
+              'alt'     => sprintf('%s, photo %d of %d', $title, $i + 1, $total),
+            )); ?>
+          <?php endforeach; ?>
+        </div>
+        <?php if ($total > 1) : ?>
+          <button type="button" class="pps-gallery__btn left-3" data-gallery-prev aria-label="Previous photo"><?php echo pps_icon('arrow', 'h-4 w-4 rotate-180'); ?></button>
+          <button type="button" class="pps-gallery__btn right-3" data-gallery-next aria-label="Next photo"><?php echo pps_icon('arrow', 'h-4 w-4'); ?></button>
+          <span class="pps-gallery__count" aria-live="polite"><span data-gallery-current>1</span> / <?php echo (int) $total; ?></span>
+        <?php endif; ?>
       </div>
     <?php elseif (has_post_thumbnail($project)) : ?>
-      <?php echo get_the_post_thumbnail($project, 'pps-card', array('class' => 'aspect-[4/3] w-full object-cover', 'loading' => 'lazy')); ?>
+      <?php echo get_the_post_thumbnail($project, 'pps-card', array('class' => 'aspect-[4/3] w-full object-cover', 'loading' => 'lazy', 'alt' => get_the_title($project))); ?>
     <?php else : ?>
       <div class="pps-placeholder aspect-[4/3] w-full"><span>Add a featured image</span></div>
     <?php endif; ?>
-    <div class="p-6">
-      <h3 class="font-display text-2xl font-bold uppercase"><?php echo esc_html(get_the_title($project)); ?></h3>
+    <div class="p-5">
+      <h3 class="pps-title text-ink"><?php echo esc_html(get_the_title($project)); ?></h3>
       <?php if ($meta) : ?>
-        <p class="mt-1 text-sm font-medium text-brand"><?php echo esc_html(implode(' | ', $meta)); ?></p>
+        <p class="mt-1 text-sm text-steel-500"><?php echo esc_html(implode(' • ', $meta)); ?></p>
       <?php endif; ?>
-      <?php if (has_excerpt($project)) : ?>
+      <?php if ($full && has_excerpt($project)) : ?>
         <p class="mt-3 text-steel-600"><?php echo esc_html(get_the_excerpt($project)); ?></p>
       <?php endif; ?>
     </div>

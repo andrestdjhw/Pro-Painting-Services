@@ -9,8 +9,8 @@ $biz = pps_business();
     <!-- 01 | Contact details -->
     <div class="lg:col-span-2">
       <div class="lg:sticky lg:top-28">
-        <h1 class="font-display text-5xl leading-[1] font-bold uppercase sm:text-6xl">Let’s Talk About Your Painting Project.</h1>
-        <div class="mt-8 rounded-lg bg-ink p-8 text-white">
+        <h1 class="pps-h1">Let’s Talk About Your Painting Project.</h1>
+        <div class="mt-8 rounded-sm bg-ink p-8 text-white">
           <?php pps_contact_panel(true); ?>
           <div class="mt-6 border-t border-steel-700 pt-6">
             <p class="text-sm tracking-wider text-steel-300 uppercase">Office</p>
