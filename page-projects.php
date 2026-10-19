@@ -35,7 +35,7 @@ $projects   = pps_get_projects(array('category' => $active, 'limit' => 24));
 </section>
 
 <!-- 02 | CTA -->
-<section class="pps-section bg-steel-50">
+<section class="pps-section bg-sand">
   <div class="pps-container flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
     <?php pps_section_heading('Have a Similar Property?', '', 'Tell us about your property, its location and the painting work you need.'); ?>
     <div class="flex flex-wrap gap-4">

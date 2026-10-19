@@ -10,7 +10,7 @@ $areas = pps_service_area_maps();
 <?php pps_page_hero('Areas We Serve.', 'Based in Albuquerque, Pro Painting Services works with commercial, multifamily and hospitality properties throughout New Mexico. Select out-of-state project inquiries are welcome.', 'projects-hero'); ?>
 
 <!-- Quick jump list -->
-<nav aria-label="Service areas" class="border-b border-steel-200 bg-steel-50">
+<nav aria-label="Service areas" class="border-b border-steel-200 bg-sand">
   <ul class="pps-container flex flex-wrap items-center gap-3 py-5">
     <?php foreach ($areas as $area) : ?>
       <li>

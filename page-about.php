@@ -13,7 +13,7 @@
 </section>
 
 <!-- 02 | What we serve -->
-<section class="pps-section bg-steel-50">
+<section class="pps-section bg-sand">
   <div class="pps-container">
     <?php pps_section_heading('Built for the Properties You Operate.', '', '', array('rule' => true)); ?>
     <div class="mt-12 grid gap-6 md:grid-cols-3">

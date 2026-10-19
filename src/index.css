@@ -13,6 +13,10 @@
   --color-brand: #ed1f24;
   --color-brand-dark: #c4161c;
   --color-charcoal: #4a4a4a;
+  /* Page surfaces: warm light grays instead of pure white (cards/forms stay white) */
+  --color-stone: #efedea;
+  --color-sand: #e4e1dc;
+  --color-silver: #c4c4c8;
   --color-ink: #111214;
   --color-steel-50: #f4f4f5;
   --color-steel-100: #ebebed;
@@ -30,6 +34,11 @@
 
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Chrome gradient from the logo's "PPS" lettering — primary CTA color */
+:root {
+  --pps-chrome-gradient: linear-gradient(175deg, #fbfbfb 0%, #e2e2e4 38%, #b3b3b8 52%, #d6d6d9 72%, #f4f4f5 100%);
 }
 
 @keyframes pps-btn-roll {
@@ -167,17 +176,27 @@
     animation: none;
   }
 
-  /* Variants: base colors + fill color + hover text color */
+  /* Variants: base colors + fill color + hover text color.
+     Primary = chrome (logo lettering) with dark text; red is reserved for brand details. */
   .pps-btn-primary {
-    @apply border-brand bg-brand text-white;
+    @apply border-silver text-ink;
+    background-image: var(--pps-chrome-gradient);
     --pps-btn-fill: var(--color-ink);
+  }
+  .pps-btn-primary:hover,
+  .pps-btn-primary:focus-visible {
+    @apply text-white;
   }
   .pps-btn-secondary {
     @apply border-ink bg-ink text-white;
-    --pps-btn-fill: var(--color-brand);
+    --pps-btn-fill: var(--pps-chrome-gradient);
   }
-  .pps-btn-secondary:hover {
-    @apply border-brand;
+  .pps-btn-secondary:hover,
+  .pps-btn-secondary:focus-visible {
+    @apply border-silver text-ink;
+  }
+  .pps-chrome-fill {
+    background-image: var(--pps-chrome-gradient);
   }
   .pps-btn-outline {
     @apply border-ink text-ink;

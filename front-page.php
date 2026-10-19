@@ -41,7 +41,7 @@ $services = pps_services();
 <!-- Property types ticker: infinite left-to-right loop. Two identical halves slide by 50%;
      each half repeats the items so even very wide screens never show a gap. -->
 <?php $ticker = array('Commercial Properties', 'Multifamily Communities', 'Hospitality Properties', 'New Mexico'); ?>
-<div class="pps-ticker flex-none border-b border-steel-200 bg-steel-50">
+<div class="pps-ticker flex-none border-b border-steel-200 bg-sand">
   <div class="pps-ticker__track">
     <?php for ($set = 0; $set < 6; $set++) : ?>
       <ul class="pps-ticker__set" <?php echo $set ? 'aria-hidden="true"' : 'aria-label="Property types we serve"'; ?>>
@@ -87,7 +87,7 @@ $reviews_widget = shortcode_exists('trustindex') ? do_shortcode($biz['reviews_sh
 $reviews        = $reviews_widget ? array() : pps_reviews();
 ?>
 <?php if ($reviews_widget || $reviews) : ?>
-  <section class="pps-section bg-steel-50">
+  <section class="pps-section bg-sand">
     <div class="pps-container">
       <div class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
         <?php pps_section_heading('What Property Clients Are Saying.', 'Client Feedback', '', array('rule' => true)); ?>
@@ -184,7 +184,7 @@ $sampler = array(
 </section>
 
 <!-- 04 | Image-led property-first statement (60 / 40) -->
-<section class="grid bg-white lg:grid-cols-5">
+<section class="grid bg-stone lg:grid-cols-5">
   <div class="overflow-hidden lg:col-span-3" data-reveal="wipe">
     <?php pps_image('home-crew', 'Painting crew on a boom lift at a mixed-use building, with a Pro Painting Services truck in front', 'aspect-[16/10] w-full object-cover', false, '(min-width: 1024px) 60vw, 100vw'); ?>
   </div>
@@ -197,10 +197,10 @@ $sampler = array(
 
 <!-- 05 | Projects -->
 <?php $projects = pps_get_projects(array('limit' => 3)); ?>
-<section class="pps-section border-t border-steel-200">
+<section class="pps-section bg-ink text-white">
   <div class="pps-container grid gap-12 <?php echo $projects ? 'lg:grid-cols-3' : ''; ?>">
     <div>
-      <?php pps_section_heading('Work You Can See.', 'Selected Work', 'Explore photographs from commercial properties, apartment communities and other completed projects.'); ?>
+      <?php pps_section_heading('Work You Can See.', 'Selected Work', 'Explore photographs from commercial properties, apartment communities and other completed projects.', array('dark' => true)); ?>
       <div class="mt-8">
         <?php pps_button('See Our Projects', home_url('/projects/')); ?>
       </div>
@@ -243,7 +243,7 @@ $sampler = array(
 </section>
 
 <!-- 08 | FAQ -->
-<section class="pps-section bg-steel-50">
+<section class="pps-section bg-sand">
   <div class="pps-container grid gap-10 lg:grid-cols-3">
     <?php pps_section_heading('Frequently Asked Questions.', '', '', array('rule' => true)); ?>
     <div class="lg:col-span-2">

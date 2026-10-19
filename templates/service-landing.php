@@ -50,7 +50,7 @@ $biz     = pps_business();
 </section>
 
 <!-- 03 | Scope and project details -->
-<section class="pps-section bg-steel-50">
+<section class="pps-section bg-sand">
   <div class="pps-container">
     <?php pps_section_heading('What to Include in Your Project Request.'); ?>
     <div class="mt-12 grid gap-6 md:grid-cols-3">
@@ -92,7 +92,7 @@ if (!$projects) {
 </section>
 
 <!-- 06 | Service questions -->
-<section class="pps-section bg-steel-50">
+<section class="pps-section bg-sand">
   <div class="pps-container grid gap-10 lg:grid-cols-3">
     <?php pps_section_heading('Service Questions.'); ?>
     <div class="lg:col-span-2"><?php pps_faq($service['faq']); ?></div>

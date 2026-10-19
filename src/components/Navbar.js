@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { ArrowIcon, PhoneIcon } from "./icons"
 
 const linkClass = active =>
-  `relative py-2 text-sm font-medium transition-colors hover:text-brand after:absolute after:inset-x-0 after:-bottom-1 after:h-0.5 after:bg-brand after:transition-transform ${
+  `relative py-2 text-sm font-medium text-steel-200 transition-colors hover:text-white after:absolute after:inset-x-0 after:-bottom-1 after:h-0.5 after:bg-brand after:transition-transform ${
     active ? "after:scale-x-100" : "after:scale-x-0"
   }`
 
@@ -15,8 +15,8 @@ function isActive(url) {
 function Logo({ data }) {
   return (
     <a href={data.homeUrl} className="flex shrink-0 items-center" aria-label={`${data.siteName} home`}>
-      {data.logoUrl ? (
-        <img src={data.logoUrl} alt={data.siteName} width="132" height="56" className="h-12 w-auto lg:h-16" />
+      {data.logoLightUrl || data.logoUrl ? (
+        <img src={data.logoLightUrl || data.logoUrl} alt={data.siteName} width="132" height="56" className="h-12 w-auto lg:h-16" />
       ) : (
         <span className="flex flex-col leading-none">
           <span className="font-display text-3xl font-extrabold tracking-tight">
@@ -84,12 +84,12 @@ function ServicesMegaMenu({ item, data }) {
 
   return (
     <li ref={ref} className="flex h-full items-center" onMouseEnter={show} onMouseLeave={hide}>
-      <a href={item.url} className={`${linkClass(isActive(item.url) || open)} ${open ? "text-brand" : ""}`}>
+      <a href={item.url} className={`${linkClass(isActive(item.url) || open)} ${open ? "text-white" : ""}`}>
         {item.label}
       </a>
       <button
         type="button"
-        className={`ml-1 p-1 hover:text-brand ${open ? "text-brand" : ""}`}
+        className={`ml-1 p-1 text-steel-200 hover:text-white ${open ? "text-white" : ""}`}
         aria-expanded={open}
         aria-controls="pps-services-menu"
         aria-label="Show services"
@@ -103,7 +103,7 @@ function ServicesMegaMenu({ item, data }) {
       <div
         id="pps-services-menu"
         hidden={!open}
-        className="absolute inset-x-0 top-full border-t border-steel-200 border-b-2 border-b-brand bg-white shadow-2xl"
+        className="absolute inset-x-0 top-full border-t border-steel-200 border-b-2 border-b-brand bg-white text-ink shadow-2xl"
       >
         <div className="mx-auto max-w-site px-4 pt-8 sm:px-6 lg:px-8 xl:px-12">
           <p className="pps-eyebrow">Property Painting</p>
@@ -190,12 +190,12 @@ function NavDropdown({ item }) {
 
   return (
     <li ref={ref} className="relative flex h-full items-center" onMouseEnter={show} onMouseLeave={hide}>
-      <a href={item.url} className={`${linkClass(active || open)} ${open ? "text-brand" : ""}`}>
+      <a href={item.url} className={`${linkClass(active || open)} ${open ? "text-white" : ""}`}>
         {item.label}
       </a>
       <button
         type="button"
-        className={`ml-1 p-1 hover:text-brand ${open ? "text-brand" : ""}`}
+        className={`ml-1 p-1 text-steel-200 hover:text-white ${open ? "text-white" : ""}`}
         aria-expanded={open}
         aria-controls={menuId}
         aria-label={`Show ${item.label} pages`}
@@ -205,7 +205,7 @@ function NavDropdown({ item }) {
           <path d="M5.3 7.3a1 1 0 0 1 1.4 0L10 10.6l3.3-3.3a1 1 0 1 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 0-1.4z" />
         </svg>
       </button>
-      <ul id={menuId} hidden={!open} className="absolute top-full left-0 w-56 border-t-2 border-brand bg-white py-2 shadow-xl ring-1 ring-steel-200">
+      <ul id={menuId} hidden={!open} className="absolute top-full left-0 w-56 border-t-2 border-brand bg-white py-2 text-ink shadow-xl ring-1 ring-steel-200">
         {item.children.map(child => (
           <li key={child.url}>
             <a
@@ -237,7 +237,7 @@ function MobileMenu({ data, onClose }) {
   }, [onClose])
 
   return (
-    <div id="pps-mobile-menu" className="fixed inset-x-0 top-[72px] bottom-0 z-40 overflow-y-auto bg-white lg:hidden">
+    <div id="pps-mobile-menu" className="fixed inset-x-0 top-[72px] bottom-0 z-40 overflow-y-auto bg-white text-ink lg:hidden">
       <ul className="divide-y divide-steel-200 px-4">
         {data.nav.map(item =>
           item.mega || item.children ? (
@@ -320,7 +320,7 @@ export default function Navbar({ data }) {
           <a href={data.quoteUrl} className="pps-btn pps-btn-primary min-h-11 px-5 text-sm" data-track="service_quote_click">
             <span className="pps-btn__text">Request a Quote</span> <ArrowIcon />
           </a>
-          <a href={data.phoneHref} className="flex items-center gap-2 text-sm font-semibold whitespace-nowrap hover:text-brand">
+          <a href={data.phoneHref} className="flex items-center gap-2 text-sm font-semibold whitespace-nowrap text-white hover:text-steel-300">
             <PhoneIcon className="h-4 w-4" />
             {data.phone}
           </a>
@@ -328,7 +328,7 @@ export default function Navbar({ data }) {
 
         <button
           type="button"
-          className="-mr-2 p-2 lg:hidden"
+          className="-mr-2 p-2 text-white lg:hidden"
           aria-expanded={menuOpen}
           aria-controls="pps-mobile-menu"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -343,12 +343,12 @@ export default function Navbar({ data }) {
       {menuOpen && <MobileMenu data={data} onClose={close} />}
 
       {/* Persistent mobile call / quote bar */}
-      <div className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 border-t border-steel-200 bg-white lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 border-t border-steel-800 bg-ink text-white lg:hidden">
         <a href={data.phoneHref} className="flex min-h-14 items-center justify-center gap-2 font-semibold">
           <PhoneIcon className="h-5 w-5 text-brand" />
           Call Now
         </a>
-        <a href={data.quoteUrl} className="flex min-h-14 items-center justify-center bg-brand font-semibold text-white" data-track="service_quote_click">
+        <a href={data.quoteUrl} className="pps-chrome-fill flex min-h-14 items-center justify-center font-semibold text-ink" data-track="service_quote_click">
           Request a Quote
         </a>
       </div>
