@@ -63,6 +63,7 @@ export default function Footer({ data }) {
             <p>&copy; {year} {data.siteName}. All rights reserved.</p>
             <a href={data.privacyUrl} className={linkClass}>Privacy Policy</a>
             <a href={data.termsUrl} className={linkClass}>Terms and Conditions</a>
+            <button type="button" data-cookie-settings className={linkClass}>Cookie Settings</button>
           </div>
           <p>
             Site by{" "}

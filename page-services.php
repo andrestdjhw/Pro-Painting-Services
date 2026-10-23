@@ -26,7 +26,7 @@ $specialty = array('pool-area-painting', 'parking-area-painting', 'metal-paintin
   <?php pps_watermark(); ?>
   <div class="pps-container flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
     <div class="max-w-2xl">
-      <h2 class="pps-heading">Not Sure Which Service Fits?</h2>
+      <h2 class="pps-heading">Ready to Get Your Project Started?</h2>
       <p class="mt-4 text-lg text-steel-200">Tell us about your property and what you need painted. Our team can help clarify the next step.</p>
     </div>
     <div class="flex flex-wrap gap-4">

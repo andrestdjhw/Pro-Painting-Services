@@ -8,7 +8,7 @@
       <h1 class="pps-h1">Painting Services Focused on Commercial and Managed Properties.</h1>
       <p class="mt-6 text-lg text-steel-600">Pro Painting Services provides commercial, multifamily and hospitality painting services across New Mexico, along with select renovation work for office spaces. We understand that every property has different needs, and the first step is to understand yours.</p>
     </div>
-    <?php pps_image('about-team', 'Painters working on a building exterior', 'aspect-[4/3] w-full rounded-sm object-cover', true); ?>
+    <?php pps_image('about-team', 'Repainted monument sign at the entrance of an apartment community', 'aspect-[4/3] w-full rounded-sm object-cover', true); ?>
   </div>
 </section>
 

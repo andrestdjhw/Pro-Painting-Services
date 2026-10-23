@@ -398,7 +398,7 @@ function pps_photo_map() {
     'service-specialty'                         => $p(28),
     'painting-process'                          => $p(43),
     'home-process'                              => $p(10),
-    'about-team'                                => $p(24),
+    'about-team'                                => '2026/10/Sign.jpg', // repainted property entrance sign
     'about-project-1'                           => $p(55),
     'about-project-2'                           => $p(18),
     'services-hero'                             => $p(35),

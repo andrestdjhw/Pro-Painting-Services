@@ -27,6 +27,9 @@
     <!-- React: src/components/Chatbot.js (pending) -->
     <div id="pps-chatbot"></div>
 
+    <!-- React: src/components/CookieBanner.js -->
+    <div id="pps-cookie"></div>
+
     <?php wp_footer(); ?>
   </body>
 </html>

@@ -353,7 +353,7 @@ function pps_process_band($text, $image_keys = array('painting-process')) {
         <p class="mt-4 text-lg text-steel-200"><?php echo esc_html($text); ?></p>
       </div>
       <div class="mt-12">
-        <?php pps_steps(array('Share property details', 'Discuss scope', 'Next steps'), true); ?>
+        <?php pps_steps(array('Share property details', 'Discuss scope', 'We get the job done'), true); ?>
       </div>
     </div>
   </section>

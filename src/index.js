@@ -4,6 +4,7 @@ import Topbar from "./components/Topbar"
 import Navbar from "./components/Navbar"
 import Footer from "./components/Footer"
 import QuoteForm from "./components/QuoteForm"
+import CookieBanner from "./components/CookieBanner"
 import { initClickTracking } from "./tracking"
 import { initAnimations } from "./animations"
 import { initTilt } from "./tilt"
@@ -18,6 +19,7 @@ function mount(el, element) {
 mount(document.getElementById("pps-topbar"), <Topbar data={data} />)
 mount(document.getElementById("pps-navbar"), <Navbar data={data} />)
 mount(document.getElementById("pps-footer"), <Footer data={data} />)
+mount(document.getElementById("pps-cookie"), <CookieBanner data={data} />)
 
 document.querySelectorAll(".pps-quote-form").forEach(el => {
   mount(el, <QuoteForm data={data} variant={el.dataset.variant} service={el.dataset.service} heading={el.dataset.heading} />)

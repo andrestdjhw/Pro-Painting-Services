@@ -44,6 +44,26 @@ function pps_favicon() {
 }
 add_action('wp_head', 'pps_favicon', 2);
 
+/**
+ * Google Consent Mode v2 defaults: everything denied until the visitor accepts in the
+ * cookie banner (src/components/CookieBanner.js). Must run before any GA4/GTM tag.
+ */
+function pps_consent_defaults() {
+  ?>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied', wait_for_update: 500});
+    try {
+      if (localStorage.getItem('pps_cookie_consent') === 'granted') {
+        gtag('consent', 'update', {ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted', analytics_storage: 'granted'});
+      }
+    } catch (e) {}
+  </script>
+  <?php
+}
+add_action('wp_head', 'pps_consent_defaults', 0);
+
 /** Data shared with the React components (Navbar, Footer, QuoteForm). */
 function pps_js_data() {
   $biz = pps_business();
